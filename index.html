@@ -5,134 +5,50 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
   <title>愚山 Classic</title>
 
-  <!-- iOS / macOS 웹앱 및 전서체 맞춤 아이콘 연동 -->
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="apple-mobile-web-app-title" content="愚山 Classic">
   <meta name="theme-color" content="#121212">
   <link rel="apple-touch-icon" href="icon.png">
 
-  <!-- HLS 실시간 스트리밍 디코더 -->
+  <!-- 최신 HLS 스트리밍 디코더 -->
   <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
 
   <style>
-    * {
-      box-sizing: border-box;
-      -webkit-tap-highlight-color: transparent;
-    }
+    * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
     body {
-      margin: 0;
-      padding: 0;
-      background-color: #121212;
-      color: #e0e0e0;
+      margin: 0; padding: 0; background-color: #121212; color: #e0e0e0;
       font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", Roboto, sans-serif;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      min-height: 100vh;
-      -webkit-user-select: none;
-      user-select: none;
+      display: flex; flex-direction: column; align-items: center; min-height: 100vh;
+      -webkit-user-select: none; user-select: none;
     }
-    .container {
-      width: 92%;
-      max-width: 450px;
-      padding: 24px 12px 40px;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-    }
-    header {
-      text-align: center;
-      margin-bottom: 20px;
-    }
-    header h1 {
-      font-size: 1.18rem;
-      font-weight: 600;
-      letter-spacing: 0.14em;
-      color: #b08d4b;
-      margin: 0 0 4px 0;
-    }
-    .sub-head {
-      font-size: 0.8rem;
-      color: #777777;
-      letter-spacing: 0.05em;
-    }
+    .container { width: 92%; max-width: 450px; padding: 24px 12px 40px; display: flex; flex-direction: column; align-items: center; }
+    header { text-align: center; margin-bottom: 20px; }
+    header h1 { font-size: 1.18rem; font-weight: 600; letter-spacing: 0.14em; color: #b08d4b; margin: 0 0 4px 0; }
+    .sub-head { font-size: 0.8rem; color: #777777; letter-spacing: 0.05em; }
     .player-card {
-      width: 100%;
-      background: #1c1c1c;
-      border: 1px solid #2d2d2d;
-      border-radius: 18px;
-      padding: 22px 20px;
-      text-align: center;
-      margin-bottom: 22px;
-      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.45);
+      width: 100%; background: #1c1c1c; border: 1px solid #2d2d2d; border-radius: 18px;
+      padding: 22px 20px; text-align: center; margin-bottom: 22px; box-shadow: 0 8px 24px rgba(0, 0, 0, 0.45);
     }
-    .now-playing {
-      font-size: 1.35rem;
-      font-weight: 600;
-      color: #ffffff;
-      margin-bottom: 6px;
-      min-height: 1.6em;
-    }
-    .status-text {
-      font-size: 0.85rem;
-      color: #888888;
-      margin-bottom: 18px;
-      min-height: 1.2em;
-    }
+    .now-playing { font-size: 1.35rem; font-weight: 600; color: #ffffff; margin-bottom: 6px; min-height: 1.6em; }
+    .status-text { font-size: 0.85rem; color: #888888; margin-bottom: 18px; min-height: 1.2em; }
     .play-btn {
-      width: 66px;
-      height: 66px;
-      border-radius: 50%;
-      border: none;
-      background: #c5a059;
-      color: #121212;
-      font-size: 1.5rem;
-      cursor: pointer;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
+      width: 66px; height: 66px; border-radius: 50%; border: none; background: #c5a059;
+      color: #121212; font-size: 1.5rem; cursor: pointer; display: inline-flex; align-items: center; justify-content: center;
       transition: transform 0.15s ease, background 0.2s ease;
     }
-    .play-btn:active {
-      transform: scale(0.93);
-      background: #ad8943;
-    }
-    .channel-list {
-      width: 100%;
-      display: grid;
-      gap: 9px;
-    }
+    .play-btn:active { transform: scale(0.93); background: #ad8943; }
+    .channel-list { width: 100%; display: grid; gap: 9px; }
     .channel-item {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 15px 18px;
-      background: #181818;
-      border: 1px solid #262626;
-      border-radius: 12px;
-      cursor: pointer;
+      display: flex; justify-content: space-between; align-items: center; padding: 15px 18px;
+      background: #181818; border: 1px solid #262626; border-radius: 12px; cursor: pointer;
       transition: border-color 0.2s, background 0.2s;
     }
-    .channel-item:active {
-      background: #242424;
-    }
-    .channel-item.active {
-      border-color: #c5a059;
-      background: #262217;
-    }
-    .channel-item .name {
-      font-size: 0.98rem;
-      font-weight: 500;
-      color: #ffffff;
-    }
-    .channel-item.active .name {
-      color: #f3d48d;
-    }
-    .channel-item .desc {
-      font-size: 0.76rem;
-      color: #777777;
-    }
+    .channel-item:active { background: #242424; }
+    .channel-item.active { border-color: #c5a059; background: #262217; }
+    .channel-item .name { font-size: 0.98rem; font-weight: 500; color: #ffffff; }
+    .channel-item.active .name { color: #f3d48d; }
+    .channel-item .desc { font-size: 0.76rem; color: #777777; }
   </style>
 </head>
 <body>
@@ -144,70 +60,83 @@
   </header>
 
   <div class="player-card">
-    <div class="now-playing" id="titleDisplay">채널을 선택하세요</div>
-    <div class="status-text" id="statusDisplay">원터치 스트리밍 준비 완료</div>
+    <div class="now-playing" id="titleDisplay">채널을 터치해 주세요</div>
+    <div class="status-text" id="statusDisplay">원터치 청취 준비 완료</div>
     <button class="play-btn" id="ctrlBtn" onclick="togglePlayback()">▶</button>
   </div>
 
   <div class="channel-list" id="channelContainer"></div>
 </div>
 
-<audio id="coreAudio" preload="none"></audio>
+<audio id="coreAudio" playsinline preload="auto"></audio>
 
 <script>
-  // 愚山 이원열 박사님을 위한 엄선 10대 명품 클래식 채널
+  // 방송사 채널 목록 (useProxy: true 인 채널은 무손실 CORS 프록시 경유)
   const channelData = [
     {
       title: "KBS Classic FM",
       desc: "93.1 MHz 대한민국 대표 클래식",
-      src: "http://serpent0.duckdns.org:8088/kbsfm.pls"
+      src: "http://serpent0.duckdns.org:8088/kbsfm.pls",
+      useProxy: true
     },
     {
       title: "CBS 음악FM",
       desc: "93.9 MHz 아름다운 당신에게",
-      src: "http://aac.cbs.co.kr/cbs939/_definst_/cbs939.stream/playlist.m3u8"
+      src: "http://aac.cbs.co.kr/cbs939/_definst_/cbs939.stream/playlist.m3u8",
+      useProxy: true
     },
     {
       title: "독일 BR-Klassik",
       desc: "바이에른 방송 최고 음질 관현악",
-      src: "https://dispatcher.rndfnk.com/br/brklassik/live/mp3/high"
+      src: "https://dispatcher.rndfnk.com/br/brklassik/live/mp3/high",
+      useProxy: false
     },
     {
       title: "영국 BBC Radio 3",
       desc: "영국 공영 심층 클래식 & 실황",
-      src: "http://as-hls-ww-live.akamaized.net/pool_904/live/ww/bbc_radio_three/bbc_radio_three.isml/bbc_radio_three-audio%3d96000.norewind.m3u8"
+      src: "http://as-hls-ww-live.akamaized.net/pool_904/live/ww/bbc_radio_three/bbc_radio_three.isml/bbc_radio_three-audio%3d96000.norewind.m3u8",
+      useProxy: true
     },
     {
       title: "미국 뉴욕 WQXR 105.9 FM",
       desc: "카네기 홀 & 메트 오페라 실황",
-      src: "https://stream.wqxr.org/wqxr"
+      src: "https://stream.wqxr.org/wqxr",
+      useProxy: false
     },
     {
       title: "네덜란드 NPO Klassiek",
       desc: "로열 콘세르트헤바우 관현악의 울림",
-      src: "https://icecast.omroep.nl/radio4-bb-mp3"
+      src: "https://icecast.omroep.nl/radio4-bb-mp3",
+      useProxy: false
     },
     {
       title: "스위스 Radio Swiss Classic",
       desc: "스위스 공영 무광고 고음질",
-      src: "http://stream.srg-ssr.ch/m/rsc_de/mp3_128"
+      src: "https://stream.srg-ssr.ch/m/rsc_de/mp3_128",
+      useProxy: false
     },
     {
       title: "프랑스 France Musique",
       desc: "라디오 프랑스 고품격 클래식",
-      src: "https://stream.radiofrance.fr/francemusique/francemusique_hifi.m3u8"
+      src: "https://stream.radiofrance.fr/francemusique/francemusique_hifi.m3u8",
+      useProxy: false
     },
     {
       title: "호주 ABC Classic",
       desc: "Sydney Classical Live",
-      src: "https://live-radio01.mediahubaustralia.com/2FMW/hls/index.m3u8"
+      src: "https://live-radio01.mediahubaustralia.com/2FMW/hls/index.m3u8",
+      useProxy: true
     },
     {
       title: "영국 Classic FM",
       desc: "London 100-102 FM",
-      src: "https://media-ice.musicradio.com/ClassicFMMP3"
+      src: "https://media-ice.musicradio.com/ClassicFMMP3",
+      useProxy: false
     }
   ];
+
+  // 무손실 프록시 엔드포인트
+  const PROXY_PREFIX = "https://corsproxy.io/?url=";
 
   const audio = document.getElementById('coreAudio');
   const titleDisplay = document.getElementById('titleDisplay');
@@ -218,7 +147,6 @@
   let hlsInstance = null;
   let currentIndex = -1;
 
-  // 채널 목록 버튼 렌더링
   channelData.forEach((ch, idx) => {
     const item = document.createElement('div');
     item.className = 'channel-item';
@@ -234,39 +162,50 @@
     currentIndex = index;
     const target = channelData[index];
 
-    // UI 활성화 표시
     document.querySelectorAll('.channel-item').forEach((elem, i) => {
       elem.classList.toggle('active', i === index);
     });
     titleDisplay.innerText = target.title;
-    statusDisplay.innerText = "스트림 연결 중...";
+    statusDisplay.innerText = "스트림 신호 연결 중...";
 
-    // 이전 HLS 연결 해제
     if (hlsInstance) {
       hlsInstance.destroy();
       hlsInstance = null;
     }
 
-    // 스트림 포맷 판별 및 재생
+    audio.pause();
+    audio.removeAttribute('src');
+    audio.load();
+
+    // 프록시 적용 대상 여부 판별
+    const finalUrl = target.useProxy ? (PROXY_PREFIX + encodeURIComponent(target.src)) : target.src;
+
     if (target.src.includes('.m3u8')) {
       if (audio.canPlayType('application/vnd.apple.mpegurl')) {
-        // iOS/macOS Safari 네이티브 처리
-        audio.src = target.src;
-        audio.play().catch(handleError);
+        audio.src = finalUrl;
+        audio.play().catch(() => {
+          statusDisplay.innerText = "재생 버튼(▶)을 터치해 주세요";
+        });
       } else if (Hls.isSupported()) {
-        hlsInstance = new Hls();
-        hlsInstance.loadSource(target.src);
+        hlsInstance = new Hls({ enableWorker: true });
+        hlsInstance.loadSource(finalUrl);
         hlsInstance.attachMedia(audio);
         hlsInstance.on(Hls.Events.MANIFEST_PARSED, () => {
-          audio.play().catch(handleError);
+          audio.play().catch(() => {
+            statusDisplay.innerText = "재생 버튼(▶)을 터치해 주세요";
+          });
         });
         hlsInstance.on(Hls.Events.ERROR, (event, data) => {
-          if (data.fatal) handleError();
+          if (data.fatal) {
+            statusDisplay.innerText = "신호 재연결 시도 중...";
+          }
         });
       }
     } else {
-      audio.src = target.src;
-      audio.play().catch(handleError);
+      audio.src = finalUrl;
+      audio.play().catch(() => {
+        statusDisplay.innerText = "재생 버튼(▶)을 터치해 주세요";
+      });
     }
 
     setSystemMediaControls(target.title, target.desc);
@@ -278,14 +217,12 @@
       return;
     }
     if (audio.paused) {
-      audio.play().catch(handleError);
+      audio.play().catch(() => {
+        statusDisplay.innerText = "재생 버튼을 다시 터치해 주세요";
+      });
     } else {
       audio.pause();
     }
-  }
-
-  function handleError() {
-    statusDisplay.innerText = "연결 재시도 중...";
   }
 
   audio.onplaying = () => {
@@ -293,12 +230,19 @@
     ctrlBtn.innerText = "❚❚";
   };
 
+  audio.onwaiting = () => {
+    statusDisplay.innerText = "버퍼링 중...";
+  };
+
   audio.onpause = () => {
     statusDisplay.innerText = "일시정지됨";
     ctrlBtn.innerText = "▶";
   };
 
-  // 차량 블루투스(핸들 리모컨, 카오디오 모니터) 및 잠금 화면 메타데이터 완벽 연동
+  audio.onerror = () => {
+    statusDisplay.innerText = "연결 지연 - 잠시 후 다시 시도해 주세요";
+  };
+
   function setSystemMediaControls(title, artist) {
     if ('mediaSession' in navigator) {
       navigator.mediaSession.metadata = new MediaMetadata({
@@ -310,12 +254,10 @@
       navigator.mediaSession.setActionHandler('play', () => audio.play());
       navigator.mediaSession.setActionHandler('pause', () => audio.pause());
       navigator.mediaSession.setActionHandler('nexttrack', () => {
-        const next = (currentIndex + 1) % channelData.length;
-        playChannel(next);
+        playChannel((currentIndex + 1) % channelData.length);
       });
       navigator.mediaSession.setActionHandler('previoustrack', () => {
-        const prev = (currentIndex - 1 + channelData.length) % channelData.length;
-        playChannel(prev);
+        playChannel((currentIndex - 1 + channelData.length) % channelData.length);
       });
     }
   }
