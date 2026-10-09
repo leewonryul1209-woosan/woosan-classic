@@ -5,14 +5,12 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
   <title>愚山 Classic</title>
 
-  <!-- iOS PWA 및 전서체 아이콘 연동 -->
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="apple-mobile-web-app-title" content="愚山 Classic">
   <meta name="theme-color" content="#121212">
   <link rel="apple-touch-icon" href="icon.png">
 
-  <!-- HLS 재생 엔진 -->
   <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
 
   <style>
@@ -45,7 +43,6 @@
       background: #181818; border: 1px solid #262626; border-radius: 12px; cursor: pointer;
       transition: border-color 0.2s, background 0.2s;
     }
-    .channel-item:active { background: #242424; }
     .channel-item.active { border-color: #c5a059; background: #262217; }
     .channel-item .name { font-size: 0.98rem; font-weight: 500; color: #ffffff; }
     .channel-item.active .name { color: #f3d48d; }
@@ -69,61 +66,21 @@
   <div class="channel-list" id="channelContainer"></div>
 </div>
 
-<audio id="coreAudio" playsinline preload="auto"></audio>
+<audio id="coreAudio" playsinline preload="none"></audio>
 
 <script>
-  // SIMON AUDIO LAB에서 실제로 검증된 작동 스트림 주소 전면 반영
+  // 지인분 사이트에서 사용된 검증된 다이렉트 주소 통합
   const channelData = [
-    {
-      title: "KBS Classic FM",
-      desc: "93.1 MHz 대한민국 대표 클래식",
-      src: "https://cfpstream.kbs.co.kr/live/1fm/playlist.m3u8"
-    },
-    {
-      title: "CBS 음악FM",
-      desc: "93.9 MHz 아름다운 당신에게",
-      src: "https://cbs939.ncscdn.com/cbs939/playlist.m3u8"
-    },
-    {
-      title: "호주 ABC Classic",
-      desc: "Sydney Classical Live",
-      src: "https://live-radio01.mediahubaustralia.com/2FMW/hls/index.m3u8"
-    },
-    {
-      title: "영국 Classic FM",
-      desc: "London 100-102 FM",
-      src: "https://media-ice.musicradio.com/ClassicFMMP3"
-    },
-    {
-      title: "독일 BR-Klassik",
-      desc: "바이에른 방송 최고 음질 관현악",
-      src: "https://dispatcher.rndfnk.com/br/brklassik/live/mp3/high"
-    },
-    {
-      title: "미국 뉴욕 WQXR 105.9 FM",
-      desc: "카네기 홀 & 메트 오페라 실황",
-      src: "https://stream.wqxr.org/wqxr"
-    },
-    {
-      title: "스위스 Radio Swiss Classic",
-      desc: "스위스 공영 무광고 고음질",
-      src: "https://stream.srg-ssr.ch/m/rsc_de/mp3_128"
-    },
-    {
-      title: "프랑스 France Musique",
-      desc: "라디오 프랑스 고품격 클래식",
-      src: "https://stream.radiofrance.fr/francemusique/francemusique_hifi.m3u8"
-    },
-    {
-      title: "네덜란드 NPO Klassiek",
-      desc: "로열 콘세르트헤바우 관현악의 울림",
-      src: "https://icecast.omroep.nl/radio4-bb-mp3"
-    },
-    {
-      title: "영국 BBC Radio 3",
-      desc: "영국 공영 심층 클래식 & 실황",
-      src: "https://stream.live.vc.bbcmedia.co.uk/bbc_radio_three"
-    }
+    { title: "KBS Classic FM", desc: "93.1 MHz 대한민국 대표 클래식", src: "https://cfpstream.kbs.co.kr/live/1fm/playlist.m3u8" },
+    { title: "CBS 음악FM", desc: "93.9 MHz 아름다운 당신에게", src: "https://cbs939.ncscdn.com/cbs939/playlist.m3u8" },
+    { title: "영국 BBC Radio 3", desc: "영국 공영 심층 클래식 & 실황", src: "https://stream.live.vc.bbcmedia.co.uk/bbc_radio_three" },
+    { title: "호주 ABC Classic", desc: "Sydney Classical Live", src: "https://live-radio01.mediahubaustralia.com/2FMW/hls/index.m3u8" },
+    { title: "독일 BR-Klassik", desc: "바이에른 방송 최고 음질 관현악", src: "https://dispatcher.rndfnk.com/br/brklassik/live/mp3/high" },
+    { title: "미국 뉴욕 WQXR", desc: "카네기 홀 & 메트 오페라 실황", src: "https://stream.wqxr.org/wqxr" },
+    { title: "영국 Classic FM", desc: "London 100-102 FM", src: "https://media-ice.musicradio.com/ClassicFMMP3" },
+    { title: "스위스 Radio Swiss", desc: "스위스 공영 무광고 고음질", src: "https://stream.srg-ssr.ch/m/rsc_de/mp3_128" },
+    { title: "프랑스 France Musique", desc: "라디오 프랑스 고품격 클래식", src: "https://stream.radiofrance.fr/francemusique/francemusique_hifi.m3u8" },
+    { title: "네덜란드 NPO Klassiek", desc: "로열 콘세르트헤바우 관현악", src: "https://icecast.omroep.nl/radio4-bb-mp3" }
   ];
 
   const audio = document.getElementById('coreAudio');
@@ -138,10 +95,7 @@
   channelData.forEach((ch, idx) => {
     const item = document.createElement('div');
     item.className = 'channel-item';
-    item.innerHTML = `
-      <span class="name">${ch.title}</span>
-      <span class="desc">${ch.desc.split(" ")[0]}</span>
-    `;
+    item.innerHTML = `<span class="name">${ch.title}</span><span class="desc">${ch.desc.split(" ")[0]}</span>`;
     item.onclick = () => playChannel(idx);
     container.appendChild(item);
   });
@@ -150,95 +104,49 @@
     currentIndex = index;
     const target = channelData[index];
 
-    document.querySelectorAll('.channel-item').forEach((elem, i) => {
-      elem.classList.toggle('active', i === index);
-    });
+    document.querySelectorAll('.channel-item').forEach((elem, i) => elem.classList.toggle('active', i === index));
     titleDisplay.innerText = target.title;
-    statusDisplay.innerText = "스트림 연결 중...";
+    statusDisplay.innerText = "연결 중...";
 
-    if (hlsInstance) {
-      hlsInstance.destroy();
-      hlsInstance = null;
-    }
-
+    if (hlsInstance) { hlsInstance.destroy(); hlsInstance = null; }
     audio.pause();
     audio.removeAttribute('src');
     audio.load();
 
-    // HLS(.m3u8) 및 직접 오디오 스트림 분기
+    // 핵심: 아이폰과 맥북(사파리)은 네이티브 엔진을 최우선으로 사용하여 차단을 우회함
     if (target.src.includes('.m3u8')) {
       if (audio.canPlayType('application/vnd.apple.mpegurl')) {
-        // Safari (iOS / macOS 네이티브 HLS 지원)
         audio.src = target.src;
-        audio.play().catch(handlePlayError);
-      } else if (Hls.isSupported()) {
-        // 크롬 및 기타 브라우저
-        hlsInstance = new Hls({ enableWorker: true });
+        audio.play().catch(() => { statusDisplay.innerText = "재생 버튼(▶)을 눌러주세요"; });
+      } else if (typeof Hls !== 'undefined' && Hls.isSupported()) {
+        hlsInstance = new Hls();
         hlsInstance.loadSource(target.src);
         hlsInstance.attachMedia(audio);
-        hlsInstance.on(Hls.Events.MANIFEST_PARSED, () => {
-          audio.play().catch(handlePlayError);
-        });
-        hlsInstance.on(Hls.Events.ERROR, (event, data) => {
-          if (data.fatal) {
-            statusDisplay.innerText = "신호 재연결 시도 중...";
-          }
-        });
+        hlsInstance.on(Hls.Events.MANIFEST_PARSED, () => audio.play().catch(() => { statusDisplay.innerText = "재생 버튼(▶)을 눌러주세요"; }));
       }
     } else {
       audio.src = target.src;
-      audio.play().catch(handlePlayError);
+      audio.play().catch(() => { statusDisplay.innerText = "재생 버튼(▶)을 눌러주세요"; });
     }
-
-    setSystemMediaControls(target.title, target.desc);
-  }
-
-  function handlePlayError() {
-    statusDisplay.innerText = "재생 버튼(▶)을 터치해 주세요";
+    setMediaSession(target.title, target.desc);
   }
 
   function togglePlayback() {
-    if (currentIndex === -1) {
-      playChannel(0);
-      return;
-    }
-    if (audio.paused) {
-      audio.play().catch(handlePlayError);
-    } else {
-      audio.pause();
-    }
+    if (currentIndex === -1) { playChannel(0); return; }
+    if (audio.paused) { audio.play(); } else { audio.pause(); }
   }
 
-  audio.onplaying = () => {
-    statusDisplay.innerText = "실시간 라이브 송출 중";
-    ctrlBtn.innerText = "❚❚";
-  };
+  audio.onplaying = () => { statusDisplay.innerText = "실시간 라이브 송출 중"; ctrlBtn.innerText = "❚❚"; };
+  audio.onpause = () => { statusDisplay.innerText = "일시정지됨"; ctrlBtn.innerText = "▶"; };
+  audio.onerror = () => { statusDisplay.innerText = "연결 지연 - 다시 터치해주세요"; };
 
-  audio.onwaiting = () => {
-    statusDisplay.innerText = "버퍼링 중...";
-  };
-
-  audio.onpause = () => {
-    statusDisplay.innerText = "일시정지됨";
-    ctrlBtn.innerText = "▶";
-  };
-
-  function setSystemMediaControls(title, artist) {
+  function setMediaSession(title, artist) {
     if ('mediaSession' in navigator) {
-      navigator.mediaSession.metadata = new MediaMetadata({
-        title: title,
-        artist: artist,
-        album: "愚山 Classic"
-      });
-
+      navigator.mediaSession.metadata = new MediaMetadata({ title: title, artist: artist, album: "愚山 Classic" });
       navigator.mediaSession.setActionHandler('play', () => audio.play());
       navigator.mediaSession.setActionHandler('pause', () => audio.pause());
-      navigator.mediaSession.setActionHandler('nexttrack', () => {
-        playChannel((currentIndex + 1) % channelData.length);
-      });
-      navigator.mediaSession.setActionHandler('previoustrack', () => {
-        playChannel((currentIndex - 1 + channelData.length) % channelData.length);
-      });
+      navigator.mediaSession.setActionHandler('nexttrack', () => playChannel((currentIndex + 1) % channelData.length));
+      navigator.mediaSession.setActionHandler('previoustrack', () => playChannel((currentIndex - 1 + channelData.length) % channelData.length));
     }
   }
 </script>
